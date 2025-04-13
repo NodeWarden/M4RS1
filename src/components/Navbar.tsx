@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, MouseEvent } from "react"
-import { CldImage } from "next-cloudinary"
 
 interface NavLink {
     href: string;
@@ -24,9 +23,9 @@ const navLinks: NavLink[] = [
 
 const marsiLinks: MarsiLink[] = [
     // { href: "/popup", label: "Connect Wallet", target:"_blank" },
-    { href: "https://marsi.platform.com", label: "MARSILAND", target: "_blank", imageSrc:"Marsi_jh73za"},
-    { href: "https://web3.okx.com/it/marketplace/runes/token/MEME%E2%80%A2ALPHA%E2%80%A2RUNE%E2%80%A2SONIC%E2%80%A2IMPULSE/870360:2296", label: "Buy on OkX", target: "_blank" , imageSrc: "okx_opraje"},
-    { href: "https://magiceden.io/runes/MEME%E2%80%A2ALPHA%E2%80%A2RUNE%E2%80%A2SONIC%E2%80%A2IMPULSE", label: "Buy on MagicEden", target: "_blank", imageSrc: "magic_eden_bsge1g" },
+    { href: "https://marsi.platform.com", label: "MARSILAND", target: "_blank", imageSrc:"https://res.cloudinary.com/drq6yxxk0/Marsi_jh73za"},
+    { href: "https://web3.okx.com/it/marketplace/runes/token/MEME%E2%80%A2ALPHA%E2%80%A2RUNE%E2%80%A2SONIC%E2%80%A2IMPULSE/870360:2296", label: "Buy on OkX", target: "_blank" , imageSrc: "https://res.cloudinary.com/drq6yxxk0/okx_opraje"},
+    { href: "https://magiceden.io/runes/MEME%E2%80%A2ALPHA%E2%80%A2RUNE%E2%80%A2SONIC%E2%80%A2IMPULSE", label: "Buy on MagicEden", target: "_blank", imageSrc: "https://res.cloudinary.com/drq6yxxk0/magic_eden_bsge1g" },
 ];
 
 
@@ -47,11 +46,10 @@ export default function Navbar(){
                     className="flex items-center font-bold hover:text-gray-400">
                         <div className="margin:auto">
                         <img
-                            src="Marsi_jh73za"
+                            src="https://res.cloudinary.com/drq6yxxk0/Marsi_jh73za"
                             alt="Marsi Logo"
                             width={75}
                             height={75}
-                            priority
                             className="home_image rounded-lg shadow-lg"
                             />
                         </div>

@@ -18,7 +18,7 @@ export default function Footer() {
             className="flex items-center gap-2 hover:underline"
             >
             <img
-                src="discord-mark-white_aooiwm"
+                src="https://res.cloudinary.com/drq6yxxk0/discord-mark-white_aooiwm"
                 alt="Discord"
                 width={20}
                 height={20}
@@ -32,7 +32,7 @@ export default function Footer() {
             className="flex items-center gap-2 hover:underline"
             >
             <img
-                src="X_zzioza"
+                src="https://res.cloudinary.com/drq6yxxk0/X_zzioza"
                 alt="X (Twitter)"
                 width={20}
                 height={20}

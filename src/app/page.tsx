@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import { CldImage } from "next-cloudinary";
 
 export default function Home() {
   return (
@@ -8,11 +6,11 @@ export default function Home() {
       <main className="fix-to-center flex flex-col gap-8 row-start-2 items-center sm:items-start">
         {/* Logo principale */}
         <img
-          src="https://res.cloudinary.com/Marsi_jh73za"
+          src="https://res.cloudinary.com/drq6yxxk0/Marsi_jh73za"
           alt="Marsi Logo"
           width={400}
           height={82}
-          priority
+          
           className="fix-to-center rounded-lg shadow-lg"
         />
 
@@ -25,7 +23,7 @@ export default function Home() {
           >
             <img
             className="dark:invert"
-              src="/file.svg"
+              src="https://res.cloudinary.com/drq6yxxk0/file_zdbmtb"
               alt="Data Icon"
               width={20}
               height={20}
@@ -38,7 +36,7 @@ export default function Home() {
           >
             <img
             className="dark:invert"
-              src="roadmap_d3nldu"
+              src="https://res.cloudinary.com/drq6yxxk0/roadmap_d3nldu"
               alt="Roadmap Icon"
               width={20}
               height={20}
@@ -51,7 +49,7 @@ export default function Home() {
           >
             <img
             className="dark:invert"
-              src="burnt_ztnvci"
+              src="https://res.cloudinary.com/drq6yxxk0/burnt_ztnvci"
               alt="Burn Icon"
               width={20}
               height={20}
