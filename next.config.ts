@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'export',
+  trailingSlash: true,
+  images: {unoptimized: true},
+  reactStrictMode: true,
+  env: {
+    HIRO_API_KEY: process.env.HIRO_API_KEY,
+  }, 
 };
 
-export default nextConfig;
+module.exports = nextConfig;

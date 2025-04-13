@@ -18,9 +18,104 @@
     --foreground: #ededed;
   }
 }
+/* Per Webkit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  display: none;
+}
+
+/* Per Firefox */
+html {
+  scrollbar-width: none;
+}
+
+.footer {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 20px;
+  position: relative;
+}
+
+.hr {
+  width: 80vw; /* Estende la linea all'intera larghezza dello schermo */
+  position: absolute;
+  outline-color: #d8ff16;
+  left: 50%;
+  transform: translateX(-50%); /* Centra la linea rispetto al footer */
+  margin: 0;
+  border: 3px;
+  border-top: 1px solid #d8ff16; /* Stile della linea */
+
+}
+
+/* body {
+  background: var(--background);
+  color: #d8ff16;
+  font-family: Arial, Helvetica, sans-serif;
+} */
+
+.fix-to-center {
+  margin: auto;
+  align-items: center;
+}
+
+.link {
+  color: #d8ff16
+}
+
+
+.home_image {
+  margin: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.home_image:hover {
+  transform: scale(1.05);
+}
+
+.navclass {
+  background: #000000;
+  border-bottom: border-zinc-800;
+}
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #d8ff16;
+  font-family: 'Courier New', Courier, monospace; /* Font stile macchina da scrivere */
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+h1 {
+  font-size: 1.8em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+h2 {
+  font-size: 1.4em;
+  margin-top: 20px;
+  margin-left: 20px; /* Indentazione livello 1 */
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  margin-bottom: 10px;
+}
+.level1 {
+  margin-left: 40px; /* Indentazione livello 2 */
+}
+.level2 {
+  margin-left: 60px; /* Indentazione livello 3 */
+}
+.level3 {
+  margin-left: 80px; /* Indentazione livello 4 */
+}
+p {
+  margin-left: 40px;
 }
