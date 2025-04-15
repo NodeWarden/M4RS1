@@ -11,7 +11,7 @@ interface BurnInfo {
 }
 
 export function formatTimestamp(timestamp: number): string {
-  return format(new Date(timestamp * 1000), 'yyyy-MM-dd');
+  return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
 }
 
 export function formatAmount(amount: string | number): string {
