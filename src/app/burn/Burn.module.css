@@ -1,0 +1,108 @@
+.pageWrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.container {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--primary-bg); /* Verde lime */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color); /* Aggiungo un bordo alla tabella */
+}
+
+/* Stili per l'header */
+.headerRow {
+  background-color: #a6d96a; /* Verde più scuro per l'intestazione */
+}
+
+.header {
+  align-items: right;
+  padding: 0.75rem;
+  font-weight: bold;
+  text-align: left;
+  width: 100%; /* Proporzione per Timestamp e Amount */
+  border-bottom: 2px solid var(--border-color); /* Bordo inferiore più spesso */
+}
+
+.headerTxid {
+  align-items: left;
+  padding: 0.75rem;
+  font-weight: bold;
+  text-align: left;
+  width: 70%; /* Più spazio per TXID */
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* Stili per le righe */
+.row {
+  max-width:100%;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* Stili per le celle */
+.cell {
+  margin:auto;
+  text-align: center;
+  align-self: right;
+  padding: auto;
+  /* width: 100%; Stessa proporzione dell'header */
+  overflow-wrap: break-word; /* Impedisce al testo lungo di traboccare */
+}
+
+.cellTxid {
+  margin:auto;
+  align-self: left;
+  padding: auto;
+  width: 90%; /* Stessa proporzione dell'header */
+  overflow-wrap: break-word; /* Spezza il testo lungo (es. TXID) */
+}
+
+/* Stili per il paragrafo Total Burned */
+.container p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--primary-bg);
+  padding: 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 600px) {
+  .headerRow, .row {
+    flex-direction: column;
+  }
+
+  .header, .headerTxid, .cell, .cellTxid {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .header, .headerTxid {
+    background-color: #8bc34a; /* Verde ancora più scuro su mobile */
+  }
+
+  .container p {
+    font-size: 0.9rem;
+  }
+}

@@ -1,37 +1,65 @@
+.pageWrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
 .container {
-  margin-top: auto;
+  margin-top: 1rem;
+  width: 100%;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: auto;
 }
 
 .table {
+  color: black;
   width: 100%;
   border-collapse: collapse;
-  color:black;
-  background-color: #d8ff16;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #d8ff16; /* Verde lime */
   border-radius: 8px;
   overflow: hidden;
 }
 
+/* Stile per le righe */
 .row {
- align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
 }
 
+/* Ultima riga senza bordo */
 .row:last-child {
-  border-bottom: none; /* Rimuove il bordo dall'ultima riga */
+  border-bottom: none;
 }
 
+/* Stile per le celle di etichetta */
 .label {
-  padding: 12px;
+  padding: 0.75rem;
   font-weight: bold;
   width: 40%;
-  background-color: #b3d311;
+  background-color: #b3d311; /* Verde più scuro per contrasto */
 }
 
+/* Stile per le celle di valore */
 .value {
-  padding: 12px;
+  padding: 0.75rem;
+  width: 60%;
 }
 
+/* Media query per schermi piccoli (mobile) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .label, .value {
+    width: 100%;
+  }
+
+  .label {
+    background-color: #b3d311; /* Verde ancora più scuro su mobile */
+  }
+}

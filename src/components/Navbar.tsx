@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, MouseEvent } from "react"
+import styles from "./Navbar.module.css"
 
 interface NavLink {
     href: string;
@@ -38,13 +39,13 @@ export default function Navbar(){
     };
 
     return (
-        <nav className="padding-bottom:4% bg-zing-900 border-b border-zinc-800">
+        <nav className={styles.navbar} role="navigation" aria-label="Main navigation">
             <div className="margin-top:3% max-w-4xl mx-auto px-4">
                 <div className="flex justify-between h-16">
                     <a
                     href="/"
                     className="flex items-center font-bold hover:text-gray-400">
-                        <div className="margin:auto">
+                        <div className={styles.logo}>
                         <img
                             src="https://res.cloudinary.com/drq6yxxk0/Marsi_jh73za"
                             alt="Marsi Logo"
@@ -53,10 +54,10 @@ export default function Navbar(){
                             className="home_image rounded-lg shadow-lg"
                             />
                         </div>
-                            Home
+                            
                     </a>
 
-                    <div className="flex space-x-8">
+                    <div className={styles.navLinks}>
                         {navLinks.map((link) => (
                             <a key={link.href} href={link.href} className="flex items-center hover:text-gray-400">
                                 {link.label}

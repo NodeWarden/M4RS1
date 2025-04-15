@@ -1,0 +1,36 @@
+.footer {
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem 0; /* Padding ridotto */
+  margin-top: 1rem; /* Margine superiore ridotto */
+  position: relative;
+}
+
+.hr {
+  width: 100vw;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer p {
+  margin-top: 0.5rem; /* Margine ridotto */
+  font-size: 0.9rem;
+  color: var(--primary-bg);
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 600px) {
+  .footer {
+    padding: 0.3rem 0;
+    margin-top: 0.5rem;
+  }
+
+  .footer p {
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+  }
+}

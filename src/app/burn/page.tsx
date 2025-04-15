@@ -1,74 +1,70 @@
 'use client';
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
 
-export function formatTimestamp(timestamp) {
-  return format(new Date(timestamp * 1000), 'yyyy-MM-dd');
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import styles from "./Burn.module.css";
+
+interface BurnInfo {
+  txid: string;
+  date: string;
+  amount: string | number;
 }
 
-export default function Home() {
-  const [burnData, setBurnData] = useState([]);
+export function formatTimestamp(timestamp: number): string {
+  return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
+}
+
+export function formatCurrency(value: number): string {
+  if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`; // Miliardi
+  if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`; // Milioni
+  if (value >= 1e3) return `${(value / 1e3).toFixed(2)}K`; // Migliaia
+  return value.toString(); // Valore normale
+}
+
+export default function Burn() {
+  const [burnData, setBurnData] = useState<BurnInfo[]>([]);
   const [totalBurned, setTotalBurned] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Chiave API Hiro da env
-  const HIRO_API_KEY = process.env.NEXT_PUBLIC_HIRO_API_KEY;
-
-
-
-  // Funzione per formattare il timestamp in YYYY-MM-DD hh:mm:ss
-  // const formatTimestamp = (timestamp) => {
-  //   if (!timestamp) return "N/D";
-  //   const date = new Date(timestamp);
-  //   return date.toISOString().replace("T", " ").substring(0, 19); // YYYY-MM-DD hh:mm:ss
-  // };
-
-  // Fetch delle attività di burn
-  const fetchBurnHistory = async () => {
+  const fetchBurnData = async () => {
     try {
       let offset = 0;
       const limit = 60;
-      let allBurns = [];
+      let allBurns: BurnInfo[] = [];
       let hasMore = true;
-      
+  
       while (hasMore) {
         const response = await fetch(
-          `https://api.hiro.so/runes/v1/etchings/870360:2296/activity/bc1qhkav5fk20r24w3p6tfrht0f272csry95txt3dp?limit=${limit}&offset=${offset}`,
-          {
-            headers: {
-              "X-API-Key": HIRO_API_KEY,
-              "Accept": "application/json",
-            },
-          }
+          `https://marsi-proxy.federicoserra-jobs.workers.dev/proxy/runes/v1/etchings/870360:2296/activity/bc1qhkav5fk20r24w3p6tfrht0f272csry95txt3dp?limit=${limit}&offset=${offset}`
         );
-
-        if (!response.ok) {
-          throw new Error(`Errore API: ${response.status} - ${response.statusText}`);
-        }
-
+  
+        if (!response.ok) throw new Error(`Errore API: ${response.status}`);
+  
         const data = await response.json();
-
-        // Log per debug: verifica la struttura dei dati
-        // console.log("Dati API:", data);
-
+  
+        // Filtra solo i "burn" e mappa i dati
         const burns = data.results
-          .filter((activity) => activity.operation === "burn")
-          .map((burn) => ({
-            txid: burn.location.tx_id || burn.txid || "N/D", // Fallback per tx_id o txid
-            date: (formatTimestamp(burn.location.timestamp) || burn.block_timestamp), // Fallback per timestamp
-            amount: burn.amount || 0, // Fallback per amount
+          .filter((activity: any) => activity.operation === "burn")
+          .map((burn: any) => ({
+            txid: burn.location.tx_id || "N/D",
+            date: formatTimestamp(burn.location.timestamp),
+            amount: burn.amount || 0,
           }));
-
+  
         allBurns = [...allBurns, ...burns];
-
-        if (data.results.length < limit) break;
         offset += limit;
+        
+        // Condizione di uscita: meno risultati del limite o raggiunto il massimo
+        if (data.results.length < limit || offset >= 1000) {
+          hasMore = false;
+        }
       }
-
-      updateBurnData(allBurns);
-    } catch (error) {
-      console.error("Errore nel fetch dei burn:", error);
+  
+      setBurnData(allBurns);
+      setTotalBurned(allBurns.reduce((sum: number, burn: BurnInfo) => sum + Number(burn.amount), 0));
+  
+    } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
@@ -76,100 +72,36 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      fetchBurnHistory();
-
-      // Polling ogni 2 minuti per aggiornamenti lowrate così non si satura l'API
-      const interval = setInterval(fetchBurnHistory, 120000);
-      return () => clearInterval(interval);
-    }
+    fetchBurnData();
   }, []);
 
-  // Aggiorna i dati e il totale
-  const updateBurnData = (burns) => {
-    setBurnData(burns);
-    const total = burns.reduce((sum, burn) => sum + Number(burn.amount || 0), 0);
-    setTotalBurned(total);
-  };
-
-  if (loading) return <p><br/>Loading...</p>;
-  if (error) return <p><br/>Error: {error}</p>;
+  // if (loading) return <div role="status">Caricamento...</div>;
+  if (error) return <div role="alert">Errore: {error}</div>;
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ marginBottom: "10px" }}>
-        MEME•ALPHA•RUNE•SONIC•IMPULSE 
-        <br/>
-      <p className="font-size:10px" style={{ marginBottom: "20px" }}>
-        Burnt coins amount: {totalBurned.toLocaleString()}
-      </p>
-       
-      </h1>
-      <h2 style={{ marginBottom: "10px", marginLeft: "1%" }}>Past Transactions:</h2>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-        }}
-      >
-        <thead>
-          <tr style={{ backgroundColor: "#0000", textAlign: "left" }}>
-            <th style={{ maxBlockSize: "10%", padding: "12px", borderBottom: "2px solid #ddd" }}>
-              TxID
-            </th>
-            <th style={{ padding: "12px", borderBottom: "2px solid #ddd" }}>
-              Date & Time
-            </th>
-            <th style={{ padding: "12px", borderBottom: "2px solid #ddd" }}>
-              Total Burnt
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {burnData.length === 0 ? (
-            <tr>
-              <td colSpan="3" style={{ padding: "12px", textAlign: "center" }}>
-                No burnt data found
-              </td>
+    <div className={styles.pageWrapper}>
+      <main className={styles.container}>
+        <h1>Burn History:</h1>
+        <p>Total Burned: {formatCurrency(totalBurned)}</p>
+        <table className={styles.table} aria-label="Storico delle transazioni di burn">
+          <thead>
+            <tr className={styles.headerRow}>
+              <th scope="col" className={styles.headerTxid}>TXID</th>
+              <th scope="col" className={styles.header}>Timestamp</th>
+              <th scope="col" className={styles.header}>Amount</th>
             </tr>
-          ) : (
-            burnData.map((burn, index) => (
-              <tr
-                key={index}
-                style={{
-                  backgroundColor: index % 2 === 0 ? "#0f0f0f0f" : "#000000",
-                  transition: "background-color 0.2s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#0f0f0f0f")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    index % 2 === 0 ? "#0f0f0f0" : "#000000")
-                }
-              >
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                  <a
-                  href={'https://mempool.space/tx/' + burn.txid}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:underline"
-                  >
-                  {burn.txid}
-                  </a>
-                </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd", whiteSpace: "nowrap" }}>
-                    {burn.date}
-                </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                  {burn.amount.toLocaleString()}
-                </td>
+          </thead>
+          <tbody>
+            {burnData.map((burn, index) => (
+              <tr key={index} className={styles.row}>
+                <td className={styles.cellTxid}>{burn.txid}</td>
+                <td className={styles.cell}>{burn.date}</td>
+                <td className={styles.cell}>{formatCurrency(Number(burn.amount))}</td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </main>
     </div>
   );
 }

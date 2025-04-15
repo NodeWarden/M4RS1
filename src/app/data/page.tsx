@@ -37,7 +37,7 @@ export default function Data() {
     try {
       const response = await fetch(apiUrl, {
         headers: {
-          // "Authorization": "Bearer YOUR_API_KEY",
+          
         },
       });
       if (!response.ok) {
