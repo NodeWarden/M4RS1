@@ -56,7 +56,7 @@ export default function Navbar(){
                         </div>
                             
                     </a>
-
+                    
                     <div className={styles.navLinks}>
                         {navLinks.map((link) => (
                             <a key={link.href} href={link.href} className="flex items-center hover:text-gray-400">

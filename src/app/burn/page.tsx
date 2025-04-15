@@ -11,14 +11,13 @@ interface BurnInfo {
 }
 
 export function formatTimestamp(timestamp: number): string {
-  return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
+  return format(new Date(timestamp * 1000), 'yyyy-MM-dd');
 }
 
-export function formatCurrency(value: number): string {
-  if (value >= 1e9) return `${(value / 1e9).toFixed(2)}B`; // Miliardi
-  if (value >= 1e6) return `${(value / 1e6).toFixed(2)}M`; // Milioni
-  if (value >= 1e3) return `${(value / 1e3).toFixed(2)}K`; // Migliaia
-  return value.toString(); // Valore normale
+export function formatAmount(amount: string | number): string {
+  const num = Number(amount);
+  if (isNaN(num)) return "0";
+  return (num / 1_000_000).toFixed(0) + "M"; // Converte in milioni (es. 99999999999999 -> 99999M)
 }
 
 export default function Burn() {
@@ -26,6 +25,7 @@ export default function Burn() {
   const [totalBurned, setTotalBurned] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recordsPerPage, setRecordsPerPage] = useState(10); // Stato per il numero di record per pagina
 
   const fetchBurnData = async () => {
     try {
@@ -43,7 +43,6 @@ export default function Burn() {
   
         const data = await response.json();
   
-        // Filtra solo i "burn" e mappa i dati
         const burns = data.results
           .filter((activity: any) => activity.operation === "burn")
           .map((burn: any) => ({
@@ -55,7 +54,6 @@ export default function Burn() {
         allBurns = [...allBurns, ...burns];
         offset += limit;
         
-        // Condizione di uscita: meno risultati del limite o raggiunto il massimo
         if (data.results.length < limit || offset >= 1000) {
           hasMore = false;
         }
@@ -75,32 +73,61 @@ export default function Burn() {
     fetchBurnData();
   }, []);
 
-  // if (loading) return <div role="status">Caricamento...</div>;
+  // Calcola i record da mostrare
+  const displayedRecords = burnData.slice(0, recordsPerPage);
+
+  if (loading) return <div role="status">Caricamento...</div>;
   if (error) return <div role="alert">Errore: {error}</div>;
 
   return (
     <div className={styles.pageWrapper}>
       <main className={styles.container}>
         <h1>Burn History:</h1>
-        <p>Total Burned: {formatCurrency(totalBurned)}</p>
-        <table className={styles.table} aria-label="Storico delle transazioni di burn">
-          <thead>
-            <tr className={styles.headerRow}>
-              <th scope="col" className={styles.headerTxid}>TXID</th>
-              <th scope="col" className={styles.header}>Timestamp</th>
-              <th scope="col" className={styles.header}>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {burnData.map((burn, index) => (
-              <tr key={index} className={styles.row}>
-                <td className={styles.cellTxid}>{burn.txid}</td>
-                <td className={styles.cell}>{burn.date}</td>
-                <td className={styles.cell}>{formatCurrency(Number(burn.amount))}</td>
+        <h2>Total Burned: {formatAmount(totalBurned)}</h2><br/>
+        <div className={styles.tableControls}>
+          <span className={styles.recordsInfo}>
+            Showing {displayedRecords.length}/{burnData.length} records
+          </span>
+          <select
+            className={styles.recordsSelect}
+            value={recordsPerPage}
+            onChange={(e) => setRecordsPerPage(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table} aria-label="Storico delle transazioni di burn">
+            <thead>
+              <tr className={styles.headerRow}>
+                <th scope="col" className={styles.headerTxid}>TXID</th>
+                <th scope="col" className={styles.header}>Timestamp</th>
+                <th scope="col" className={styles.header}>Amount</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {displayedRecords.map((burn, index) => (
+                <tr key={index} className={styles.row}>
+                  <td className={styles.cellTxid}>
+                  <a
+                    href={'https://mempool.space/tx/' + burn.txid}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                      {burn.txid}
+                    </a>
+                  </td>
+                  <td className={styles.cell}>{burn.date}</td>
+                  <td className={styles.cell}>{formatAmount(burn.amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </main>
     </div>
   );

@@ -2,7 +2,6 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 1rem;
 }
 
@@ -12,46 +11,61 @@
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
+}
+
+/* Wrapper per la tabella per gestire lo scorrimento su mobile */
+.tableWrapper {
+  width: 100%;
+  /* overflow-x: auto; */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .table {
   width: 100%;
+  max-width: 800px;
   border-collapse: collapse;
   background-color: var(--primary-bg); /* Verde lime */
   border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border-color); /* Aggiungo un bordo alla tabella */
+  border: 1px solid var(--border-color);
+  display: table;
 }
 
 /* Stili per l'header */
 .headerRow {
-  background-color: #a6d96a; /* Verde più scuro per l'intestazione */
+  background-color: #d3ff16; /* Verde più scuro per l'intestazione */
+  display: table-row;
 }
 
 .header {
-  align-items: right;
+  color:black;
   padding: 0.75rem;
   font-weight: bold;
   text-align: left;
-  width: 100%; /* Proporzione per Timestamp e Amount */
-  border-bottom: 2px solid var(--border-color); /* Bordo inferiore più spesso */
+  width: 20%; /* Proporzione per Timestamp e Amount */
+  border-bottom: 2px solid var(--border-color);
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .headerTxid {
-  align-items: left;
+  color:black;
   padding: 0.75rem;
   font-weight: bold;
   text-align: left;
-  width: 70%; /* Più spazio per TXID */
+  width: 60%; /* Più spazio per TXID */
   border-bottom: 2px solid var(--border-color);
+  display: table-cell;
+  vertical-align: middle;
 }
 
 /* Stili per le righe */
 .row {
-  max-width:100%;
   border-bottom: 1px solid var(--border-color);
-  display: flex;
-  flex-wrap: wrap;
+  display: table-row;
 }
 
 .row:last-child {
@@ -60,23 +74,22 @@
 
 /* Stili per le celle */
 .cell {
-  margin:auto;
-  text-align: center;
-  align-self: right;
-  padding: auto;
-  /* width: 100%; Stessa proporzione dell'header */
+  padding: 0.75rem;
+  width: 20%; /* Stessa proporzione dell'header */
+  display: table-cell;
+  vertical-align: middle;
   overflow-wrap: break-word; /* Impedisce al testo lungo di traboccare */
 }
 
 .cellTxid {
-  margin:auto;
-  align-self: left;
-  padding: auto;
-  width: 90%; /* Stessa proporzione dell'header */
-  overflow-wrap: break-word; /* Spezza il testo lungo (es. TXID) */
+  padding: 0.75rem;
+  width: 60%; /* Stessa proporzione dell'header */
+  display: table-cell;
+  vertical-align: middle;
+  overflow-wrap: break-word;
 }
 
-/* Stili per il paragrafo Total Burned */
+/* Stili per il paragrafo Total Burned e Showing Records */
 .container p {
   margin-bottom: 1rem;
   font-size: 1rem;
@@ -87,22 +100,48 @@
   display: inline-block;
 }
 
+/* Stili per il menu a tendina e il testo Showing Records */
+.tableControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.recordsInfo {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.recordsSelect {
+  padding: 0.3rem;
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
 /* Media query per schermi piccoli */
 @media (max-width: 600px) {
-  .headerRow, .row {
-    flex-direction: column;
-  }
-
-  .header, .headerTxid, .cell, .cellTxid {
-    width: 100%;
-    min-width: unset;
-  }
-
-  .header, .headerTxid {
-    background-color: #8bc34a; /* Verde ancora più scuro su mobile */
+  .table {
+    min-width: 600px; /* Minima larghezza per mantenere leggibilità */
   }
 
   .container p {
     font-size: 0.9rem;
+  }
+
+  .tableControls {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .recordsInfo, .recordsSelect {
+    font-size: 0.8rem;
   }
 }
