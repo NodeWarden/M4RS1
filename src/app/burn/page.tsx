@@ -10,40 +10,38 @@ interface BurnInfo {
   amount: string | number;
 }
 
-
-
 export default function Burn() {
   const [burnData, setBurnData] = useState<BurnInfo[]>([]);
   const [totalBurned, setTotalBurned] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recordsPerPage, setRecordsPerPage] = useState(10); // Stato per il numero di record per pagina
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   function formatTimestamp(timestamp: number): string {
     return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
   }
-  
-  function formatAmount(amount: string | number): string {
-    const num = Number(amount);
-    if (isNaN(num)) return "0";
-    return (num / 1_000_000).toFixed(0) + "M"; // Converte in milioni (es. 99999999999999 -> 99999M)
+
+  function formatTotalAmount(amount: number): string {
+    const trillions = amount / 1_000_000_000_000;
+    return trillions.toFixed(1) + "T"; // Converte in trilioni (es. 4900000000000 -> 4,9T)
   }
-  
+
   const fetchBurnData = async () => {
     try {
       let offset = 0;
       const limit = 60;
       let allBurns: BurnInfo[] = [];
       let hasMore = true;
-  
+
       while (hasMore) {
         const response = await fetch(
           `https://marsi-proxy.federicoserra-jobs.workers.dev/proxy/runes/v1/etchings/870360:2296/activity/bc1qhkav5fk20r24w3p6tfrht0f272csry95txt3dp?limit=${limit}&offset=${offset}`
         );
-  
+
         if (!response.ok) throw new Error(`Errore API: ${response.status}`);
-  
+
         const data = await response.json();
-  
+
         const burns = data.results
           .filter((activity: any) => activity.operation === "burn")
           .map((burn: any) => ({
@@ -51,18 +49,18 @@ export default function Burn() {
             date: formatTimestamp(burn.location.timestamp),
             amount: burn.amount || 0,
           }));
-  
+
         allBurns = [...allBurns, ...burns];
         offset += limit;
-        
+
         if (data.results.length < limit || offset >= 1000) {
           hasMore = false;
         }
       }
-  
+
       setBurnData(allBurns);
       setTotalBurned(allBurns.reduce((sum: number, burn: BurnInfo) => sum + Number(burn.amount), 0));
-  
+
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -74,7 +72,6 @@ export default function Burn() {
     fetchBurnData();
   }, []);
 
-  // Calcola i record da mostrare
   const displayedRecords = burnData.slice(0, recordsPerPage);
 
   if (loading) return <div role="status">Caricamento...</div>;
@@ -83,8 +80,8 @@ export default function Burn() {
   return (
     <div className={styles.pageWrapper}>
       <main className={styles.container}>
-        <h1>Burn History:</h1>
-        <h2>Total Burned: {formatAmount(totalBurned)}</h2><br/>
+        <h1>BURN HISTORY</h1>
+        <h2>Total Burnt: {formatTotalAmount(totalBurned)} Ⓜ</h2><br/>
         <div className={styles.tableControls}>
           <span className={styles.recordsInfo}>
             Showing {displayedRecords.length}/{burnData.length} records
@@ -113,17 +110,17 @@ export default function Burn() {
               {displayedRecords.map((burn, index) => (
                 <tr key={index} className={styles.row}>
                   <td className={styles.cellTxid}>
-                  <a
-                    href={'https://mempool.space/tx/' + burn.txid}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
+                    <a
+                      href={'https://mempool.space/tx/' + burn.txid}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
                       {burn.txid}
                     </a>
                   </td>
                   <td className={styles.cell}>{burn.date}</td>
-                  <td className={styles.cell}>{formatAmount(burn.amount)}</td>
+                  <td className={styles.cell}>{Number(burn.amount).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
