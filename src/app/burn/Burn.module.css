@@ -28,7 +28,8 @@
   width: 100%;
   max-width: 800px;
   border-collapse: collapse;
-  background-color: var(--primary-bg); /* Verde lime */
+  background-color: #d3ff16; /* Verde lime */
+  color: black;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   display: table;
@@ -36,7 +37,7 @@
 
 /* Stili per l'header */
 .headerRow {
-  background-color: #d3ff16; /* Verde più scuro per l'intestazione */
+  background-color: #b3d311; /* Verde più scuro per l'intestazione */
   display: table-row;
 }
 
