@@ -43,7 +43,7 @@ export default function Footer() {
         </div>
         <div className="block flex-col items-center">
             <a
-            href="https://unisat.io/address/bc1qhkav5fk20r24w3p6tfrht0f272csry95txt3dp?tab=names&dt=btc"
+            href="https://ordinals.com/address/bc1qhkav5fk20r24w3p6tfrht0f272csry95txt3dp"
             target="_blank">
                 <h4>©2025 marsi.btc </h4>
             </a>
