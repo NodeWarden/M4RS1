@@ -10,15 +10,7 @@ interface BurnInfo {
   amount: string | number;
 }
 
-export function formatTimestamp(timestamp: number): string {
-  return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
-}
 
-export function formatAmount(amount: string | number): string {
-  const num = Number(amount);
-  if (isNaN(num)) return "0";
-  return (num / 1_000_000).toFixed(0) + "M"; // Converte in milioni (es. 99999999999999 -> 99999M)
-}
 
 export default function Burn() {
   const [burnData, setBurnData] = useState<BurnInfo[]>([]);
@@ -26,7 +18,16 @@ export default function Burn() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recordsPerPage, setRecordsPerPage] = useState(10); // Stato per il numero di record per pagina
-
+  function formatTimestamp(timestamp: number): string {
+    return format(new Date(timestamp * 1000), 'yyyy/MM/dd');
+  }
+  
+  function formatAmount(amount: string | number): string {
+    const num = Number(amount);
+    if (isNaN(num)) return "0";
+    return (num / 1_000_000).toFixed(0) + "M"; // Converte in milioni (es. 99999999999999 -> 99999M)
+  }
+  
   const fetchBurnData = async () => {
     try {
       let offset = 0;
