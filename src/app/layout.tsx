@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "MAR$I RUNE",
-  description: "Developed by Federico Serra",
+  description: "Developed by N0d€WarD3n",
   // icons: {
   //   icon: "/favicon.ico}",
   // },
